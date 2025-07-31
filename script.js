@@ -65,6 +65,9 @@ function loadQuestion() {
     const btn = document.getElementById(`option${i}`);
     btn.innerText = q.options[i];
     btn.setAttribute("data-value", q.options[i]);
+    btn.style.backgroundColor = "transparent";  // Reset background
+    btn.style.color = "white";                 // Reset text color
+    btn.disabled = false;                      // Re-enable button
   }
 }
 
