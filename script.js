@@ -61,18 +61,35 @@ function loadQuestion() {
   document.getElementById("num3").innerText = `${q.operators[1]} ${q.numbers[2]}`;
   document.getElementById("num4").innerText = `${q.operators[2]} ${q.numbers[3]}`;
 
+  const optionButtons = document.getElementsByClassName("option-btn");
   for (let i = 0; i < 4; i++) {
-    const btn = document.getElementById(`option${i}`);
-    btn.innerText = q.options[i];
-    btn.setAttribute("data-value", q.options[i]);
+    optionButtons[i].innerText = q.options[i];
+    optionButtons[i].style.backgroundColor = "transparent";
+    optionButtons[i].style.color = "white";
+    optionButtons[i].disabled = false;
   }
 }
 
 function selectAnswer(btn) {
-  const selected = Number(btn.getAttribute("data-value"));
+  const selected = Number(btn.innerText);
   const q = questions[currentQuestion];
 
   attempted++;
+  const optionButtons = document.getElementsByClassName("option-btn");
+
+  for (let i = 0; i < 4; i++) {
+    optionButtons[i].disabled = true;
+
+    const optionValue = Number(optionButtons[i].innerText);
+    if (optionValue === q.correctAnswer) {
+      optionButtons[i].style.backgroundColor = "#00ff88";
+      optionButtons[i].style.color = "#000";
+    } else if (optionButtons[i] === btn) {
+      optionButtons[i].style.backgroundColor = "#ff5555";
+      optionButtons[i].style.color = "#000";
+    }
+  }
+
   if (selected === q.correctAnswer) {
     score++;
     correct++;
@@ -80,12 +97,14 @@ function selectAnswer(btn) {
     wrong++;
   }
 
-  currentQuestion++;
-  if (currentQuestion >= 100 || timeLeft <= 0) {
-    showResult();
-  } else {
-    loadQuestion();
-  }
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion >= 100 || timeLeft <= 0) {
+      showResult();
+    } else {
+      loadQuestion();
+    }
+  }, 600); // short delay before next question
 }
 
 function startQuiz() {

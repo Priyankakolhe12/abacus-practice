@@ -38,26 +38,32 @@ body {
 }
 
 .answers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 options per row */
+  gap: 20px;
+  justify-items: center;
+  margin-top: 20px;
 }
 
 .option-btn {
   background-color: transparent;
   border: 2px solid white;
   color: white;
-  font-size: 18px;
-  padding: 10px 20px;
-  border-radius: 12px;
+  font-size: 24px; /* Increased font size */
+  padding: 20px 30px; /* Larger buttons */
+  border-radius: 15px;
   cursor: pointer;
+  width: 100%; /* Full width inside grid cell */
+  max-width: 220px; /* Limit size */
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
 .option-btn:hover {
   background-color: #00ff88;
   color: #000;
 }
+
 
 .hidden {
   display: none;
