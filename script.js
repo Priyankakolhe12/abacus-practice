@@ -5,10 +5,10 @@ let attempted = 0;
 let correct = 0;
 let wrong = 0;
 let timer;
-let timeLeft = 180; // 3 minutes
+let timeLeft = 180;
 
 function getRandomNumber() {
-  return Math.floor(Math.random() * 9) + 1; // 1 to 9
+  return Math.floor(Math.random() * 9) + 1;
 }
 
 function getRandomOperator() {
@@ -18,28 +18,29 @@ function getRandomOperator() {
 function generateQuestion() {
   const nums = [getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()];
   const ops = [getRandomOperator(), getRandomOperator(), getRandomOperator()];
-  let expression = `${nums[0]}${ops[0]}${nums[1]}${ops[1]}${nums[2]}${ops[2]}${nums[3]}`;
-  let answer = eval(expression);
+  const expression = `${nums[0]}${ops[0]}${nums[1]}${ops[1]}${nums[2]}${ops[2]}${nums[3]}`;
+  const answer = eval(expression);
 
   if (answer < 0 || !Number.isInteger(answer)) {
     return generateQuestion();
   }
 
-  let options = [answer];
-  while (options.length < 4) {
-    let option = answer + Math.floor(Math.random() * 11) - 5;
-    if (option >= 0 && !options.includes(option)) {
-      options.push(option);
+  let options = new Set();
+  options.add(answer);
+
+  while (options.size < 4) {
+    let offset = Math.floor(Math.random() * 5) + 1;
+    let fakeOption = Math.random() > 0.5 ? answer + offset : answer - offset;
+    if (fakeOption >= 0 && !options.has(fakeOption)) {
+      options.add(fakeOption);
     }
   }
-
-  options = shuffleArray(options);
 
   return {
     numbers: nums,
     operators: ops,
     correctAnswer: answer,
-    options: options,
+    options: shuffleArray(Array.from(options))
   };
 }
 
@@ -60,14 +61,15 @@ function loadQuestion() {
   document.getElementById("num3").innerText = `${q.operators[1]} ${q.numbers[2]}`;
   document.getElementById("num4").innerText = `${q.operators[2]} ${q.numbers[3]}`;
 
-  const optionButtons = document.getElementsByClassName("option-btn");
   for (let i = 0; i < 4; i++) {
-    optionButtons[i].innerText = q.options[i];
+    const btn = document.getElementById(`option${i}`);
+    btn.innerText = q.options[i];
+    btn.setAttribute("data-value", q.options[i]);
   }
 }
 
 function selectAnswer(btn) {
-  const selected = Number(btn.innerText);
+  const selected = Number(btn.getAttribute("data-value"));
   const q = questions[currentQuestion];
 
   attempted++;

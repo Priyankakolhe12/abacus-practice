@@ -11,8 +11,8 @@
 
     <!-- Start Section -->
     <div id="start-section">
-      <h2 style="text-align:center;">🧮 Abacus Practice</h2>
-      <p style="text-align:center; margin: 20px 0;">Test your speed and accuracy with 100 questions in 3 minutes!</p>
+      <h2>🧮 Abacus Practice</h2>
+      <p>Test your speed and accuracy with 100 questions in 3 minutes!</p>
       <button class="option-btn" onclick="showQuiz()">Start Quiz</button>
     </div>
 
@@ -31,17 +31,16 @@
       </div>
 
       <div class="answers">
-        <button class="option-btn" onclick="selectAnswer(this)">A</button>
-        <button class="option-btn" onclick="selectAnswer(this)">B</button>
-        <button class="option-btn" onclick="selectAnswer(this)">C</button>
-        <button class="option-btn" onclick="selectAnswer(this)">D</button>
+        <button class="option-btn" onclick="selectAnswer(this)" id="option0"></button>
+        <button class="option-btn" onclick="selectAnswer(this)" id="option1"></button>
+        <button class="option-btn" onclick="selectAnswer(this)" id="option2"></button>
+        <button class="option-btn" onclick="selectAnswer(this)" id="option3"></button>
       </div>
     </div>
 
     <!-- Result Section -->
     <div id="result-section" class="hidden">
       <h2 id="feedback">Excellent!</h2>
-      <p id="time-stamp"></p>
       <h1 class="score-heading">Total Score: <span id="score">0</span></h1>
       <div class="result-metrics">
         <div class="circle">Total<br/>Questions<br/><span>100</span></div>
