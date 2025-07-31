@@ -8,7 +8,16 @@
 </head>
 <body>
   <div class="container">
-    <div id="quiz-section">
+
+    <!-- Start Section -->
+    <div id="start-section">
+      <h2 style="text-align:center;">🧮 Abacus Practice</h2>
+      <p style="text-align:center; margin: 20px 0;">Test your speed and accuracy with 100 questions in 3 minutes!</p>
+      <button class="option-btn" onclick="showQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quiz-section" class="hidden">
       <div class="top-bar">
         <h2 id="question-number">Question: 1</h2>
         <div id="timer">3:00</div>
@@ -29,6 +38,7 @@
       </div>
     </div>
 
+    <!-- Result Section -->
     <div id="result-section" class="hidden">
       <h2 id="feedback">Excellent!</h2>
       <p id="time-stamp"></p>
@@ -42,6 +52,7 @@
       <br><br>
       <button onclick="restartQuiz()" class="option-btn">Start Again</button>
     </div>
+
   </div>
 
   <script src="script.js"></script>

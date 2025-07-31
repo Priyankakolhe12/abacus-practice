@@ -18,26 +18,22 @@ function getRandomOperator() {
 function generateQuestion() {
   const nums = [getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()];
   const ops = [getRandomOperator(), getRandomOperator(), getRandomOperator()];
-
-  // Create the expression: num1 op1 num2 op2 num3 op3 num4
   let expression = `${nums[0]}${ops[0]}${nums[1]}${ops[1]}${nums[2]}${ops[2]}${nums[3]}`;
-
   let answer = eval(expression);
 
-  // Avoid negative or decimal answers
   if (answer < 0 || !Number.isInteger(answer)) {
     return generateQuestion();
   }
 
   let options = [answer];
   while (options.length < 4) {
-    let option = answer + Math.floor(Math.random() * 11) - 5; // +/- 5
+    let option = answer + Math.floor(Math.random() * 11) - 5;
     if (option >= 0 && !options.includes(option)) {
       options.push(option);
     }
   }
 
-  options = shuffleArray(options); // Randomize order
+  options = shuffleArray(options);
 
   return {
     numbers: nums,
@@ -59,7 +55,6 @@ function loadQuestion() {
 
   const q = questions[currentQuestion];
   document.getElementById("question-number").innerText = `Question: ${currentQuestion + 1}`;
-
   document.getElementById("num1").innerText = q.numbers[0];
   document.getElementById("num2").innerText = `${q.operators[0]} ${q.numbers[1]}`;
   document.getElementById("num3").innerText = `${q.operators[1]} ${q.numbers[2]}`;
@@ -84,14 +79,12 @@ function selectAnswer(btn) {
   }
 
   currentQuestion++;
-
   if (currentQuestion >= 100 || timeLeft <= 0) {
-    showResult();  // show final result after 100th answer
+    showResult();
   } else {
-    loadQuestion(); // load next one
+    loadQuestion();
   }
 }
-
 
 function startQuiz() {
   questions = [];
@@ -107,6 +100,7 @@ function startQuiz() {
   }
 
   document.getElementById("quiz-section").classList.remove("hidden");
+  document.getElementById("start-section").classList.add("hidden");
   document.getElementById("result-section").classList.add("hidden");
 
   loadQuestion();
@@ -125,7 +119,8 @@ function showResult() {
 }
 
 function restartQuiz() {
-  startQuiz();
+  document.getElementById("result-section").classList.add("hidden");
+  document.getElementById("start-section").classList.remove("hidden");
 }
 
 function startTimer() {
@@ -146,5 +141,6 @@ function formatTime(seconds) {
   return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// Start quiz on page load
-window.onload = startQuiz;
+function showQuiz() {
+  startQuiz();
+}

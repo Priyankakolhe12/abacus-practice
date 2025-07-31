@@ -11,7 +11,7 @@ body {
   padding: 20px;
 }
 
-#quiz-section, #result-section {
+#quiz-section, #result-section, #start-section {
   border: 3px solid #00ff88;
   border-radius: 15px;
   padding: 20px;
