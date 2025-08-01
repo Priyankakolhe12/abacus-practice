@@ -40,8 +40,8 @@ function generateQuestion(numCount = 4) {
   const expression = expressionParts.join('');
   const answer = eval(expression);
 
-  if (answer > 25 || !Number.isInteger(answer)) {
-    return generateQuestion(numCount); // reject if final answer > 25
+  if (answer > 20 || !Number.isInteger(answer)) {
+    return generateQuestion(numCount); // reject if final answer > 20
   }
 
   let options = new Set();
