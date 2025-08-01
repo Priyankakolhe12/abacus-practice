@@ -8,31 +8,29 @@ let timer;
 let timeLeft = 180;
 
 function getRandomNumber() {
-  return Math.floor(Math.random() * 9) + 1;
+  return Math.floor(Math.random() * 6) + 1; // 1 to 6 only to avoid large sums
 }
 
 function getRandomOperator() {
   return Math.random() > 0.5 ? '+' : '-';
 }
 
-function generateQuestion() {
-  const nums = [getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()];
-  const ops = [getRandomOperator(), getRandomOperator(), getRandomOperator()];
+function generateQuestion(numCount = 4) {
+  const nums = Array.from({ length: numCount }, () => getRandomNumber());
+  const ops = Array.from({ length: numCount - 1 }, () => getRandomOperator());
 
   let expressionParts = [];
   let temp = nums[0];
   expressionParts.push(temp);
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < ops.length; i++) {
     if (ops[i] === '-' && temp < nums[i + 1]) {
-      return generateQuestion(); // avoid 3 - 6 kind of sums
+      return generateQuestion(numCount); // prevent 3 - 6 cases
     }
 
     temp = eval(`${temp}${ops[i]}${nums[i + 1]}`);
-    
-    // Reject if intermediate result is negative or non-integer
     if (temp < 0 || !Number.isInteger(temp)) {
-      return generateQuestion();
+      return generateQuestion(numCount); // no negative or decimal intermediate values
     }
 
     expressionParts.push(ops[i]);
@@ -42,12 +40,10 @@ function generateQuestion() {
   const expression = expressionParts.join('');
   const answer = eval(expression);
 
-  // 🔴 Reject if final answer > 25
   if (answer > 25 || !Number.isInteger(answer)) {
-    return generateQuestion();
+    return generateQuestion(numCount); // reject if final answer > 25
   }
 
-  // Generate options
   let options = new Set();
   options.add(answer);
 
@@ -81,8 +77,12 @@ function loadQuestion() {
   document.getElementById("question-number").innerText = `Question: ${currentQuestion + 1}`;
   document.getElementById("num1").innerText = q.numbers[0];
   document.getElementById("num2").innerText = `${q.operators[0]} ${q.numbers[1]}`;
-  document.getElementById("num3").innerText = `${q.operators[1]} ${q.numbers[2]}`;
-  document.getElementById("num4").innerText = `${q.operators[2]} ${q.numbers[3]}`;
+  document.getElementById("num3").innerText = q.operators[1]
+    ? `${q.operators[1]} ${q.numbers[2]}`
+    : '';
+  document.getElementById("num4").innerText = q.operators[2]
+    ? `${q.operators[2]} ${q.numbers[3]}`
+    : '';
 
   for (let i = 0; i < 4; i++) {
     const btn = document.getElementById(`option${i}`);
@@ -123,9 +123,17 @@ function startQuiz() {
   wrong = 0;
   timeLeft = 180;
 
-  for (let i = 0; i < 100; i++) {
-    questions.push(generateQuestion());
+  // Generate 80 four-number questions
+  for (let i = 0; i < 80; i++) {
+    questions.push(generateQuestion(4));
   }
+
+  // Generate 20 three-number questions
+  for (let i = 0; i < 20; i++) {
+    questions.push(generateQuestion(3));
+  }
+
+  questions = shuffleArray(questions); // mix all questions
 
   document.getElementById("quiz-section").classList.remove("hidden");
   document.getElementById("start-section").classList.add("hidden");
@@ -140,7 +148,6 @@ function showResult() {
   document.getElementById("quiz-section").classList.add("hidden");
   document.getElementById("result-section").classList.remove("hidden");
 
-  // Feedback message based on score
   let message = "";
   if (score >= 90) {
     message = "Excellent!";
