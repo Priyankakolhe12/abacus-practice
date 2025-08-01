@@ -18,12 +18,27 @@ function getRandomOperator() {
 function generateQuestion() {
   const nums = [getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()];
   const ops = [getRandomOperator(), getRandomOperator(), getRandomOperator()];
-  const expression = `${nums[0]}${ops[0]}${nums[1]}${ops[1]}${nums[2]}${ops[2]}${nums[3]}`;
-  const answer = eval(expression);
 
-  if (answer < 0 || !Number.isInteger(answer)) {
-    return generateQuestion();
+  let expressionParts = [];
+  let temp = nums[0];
+  expressionParts.push(temp);
+
+  for (let i = 0; i < 3; i++) {
+    if (ops[i] === '-' && temp < nums[i + 1]) {
+      return generateQuestion(); // avoid 3 - 6, etc.
+    }
+
+    expressionParts.push(ops[i]);
+    expressionParts.push(nums[i + 1]);
+
+    temp = eval(`${temp}${ops[i]}${nums[i + 1]}`);
+    if (temp < 0 || !Number.isInteger(temp)) {
+      return generateQuestion(); // reject intermediate negatives or non-integers
+    }
   }
+
+  const expression = expressionParts.join('');
+  const answer = eval(expression);
 
   let options = new Set();
   options.add(answer);
@@ -65,9 +80,9 @@ function loadQuestion() {
     const btn = document.getElementById(`option${i}`);
     btn.innerText = q.options[i];
     btn.setAttribute("data-value", q.options[i]);
-    btn.style.backgroundColor = "transparent";  // Reset background
-    btn.style.color = "white";                 // Reset text color
-    btn.disabled = false;                      // Re-enable button
+    btn.style.backgroundColor = "transparent";  // reset bg
+    btn.style.color = "white";                 // reset text
+    btn.disabled = false;
   }
 }
 
@@ -117,6 +132,17 @@ function showResult() {
   document.getElementById("quiz-section").classList.add("hidden");
   document.getElementById("result-section").classList.remove("hidden");
 
+  // Show result text based on score
+  let message = "";
+  if (score >= 90) {
+    message = "Excellent!";
+  } else if (score >= 70) {
+    message = "Good!";
+  } else {
+    message = "Need More Practice!";
+  }
+
+  document.getElementById("feedback").innerText = message;
   document.getElementById("attempted").innerText = attempted;
   document.getElementById("correct").innerText = correct;
   document.getElementById("wrong").innerText = wrong;
