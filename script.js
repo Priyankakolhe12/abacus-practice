@@ -25,28 +25,36 @@ function generateQuestion() {
 
   for (let i = 0; i < 3; i++) {
     if (ops[i] === '-' && temp < nums[i + 1]) {
-      return generateQuestion(); // avoid 3 - 6, etc.
+      return generateQuestion(); // avoid 3 - 6 kind of sums
+    }
+
+    temp = eval(`${temp}${ops[i]}${nums[i + 1]}`);
+    
+    // Reject if intermediate result is negative or non-integer
+    if (temp < 0 || !Number.isInteger(temp)) {
+      return generateQuestion();
     }
 
     expressionParts.push(ops[i]);
     expressionParts.push(nums[i + 1]);
-
-    temp = eval(`${temp}${ops[i]}${nums[i + 1]}`);
-    if (temp < 0 || !Number.isInteger(temp)) {
-      return generateQuestion(); // reject intermediate negatives or non-integers
-    }
   }
 
   const expression = expressionParts.join('');
   const answer = eval(expression);
 
+  // 🔴 Reject if final answer > 25
+  if (answer > 25 || !Number.isInteger(answer)) {
+    return generateQuestion();
+  }
+
+  // Generate options
   let options = new Set();
   options.add(answer);
 
   while (options.size < 4) {
     let offset = Math.floor(Math.random() * 5) + 1;
     let fakeOption = Math.random() > 0.5 ? answer + offset : answer - offset;
-    if (fakeOption >= 0 && !options.has(fakeOption)) {
+    if (fakeOption >= 0 && fakeOption <= 25 && !options.has(fakeOption)) {
       options.add(fakeOption);
     }
   }
@@ -80,8 +88,8 @@ function loadQuestion() {
     const btn = document.getElementById(`option${i}`);
     btn.innerText = q.options[i];
     btn.setAttribute("data-value", q.options[i]);
-    btn.style.backgroundColor = "transparent";  // reset bg
-    btn.style.color = "white";                 // reset text
+    btn.style.backgroundColor = "transparent";
+    btn.style.color = "white";
     btn.disabled = false;
   }
 }
@@ -132,7 +140,7 @@ function showResult() {
   document.getElementById("quiz-section").classList.add("hidden");
   document.getElementById("result-section").classList.remove("hidden");
 
-  // Show result text based on score
+  // Feedback message based on score
   let message = "";
   if (score >= 90) {
     message = "Excellent!";
