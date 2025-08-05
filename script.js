@@ -8,7 +8,7 @@ let timer;
 let timeLeft = 180;
 
 function getRandomNumber() {
-  return Math.floor(Math.random() * 6) + 1; // 1 to 6 only to avoid large sums
+  return Math.floor(Math.random() * 6) + 1; // 1 to 6 only
 }
 
 function getRandomOperator() {
@@ -25,12 +25,12 @@ function generateQuestion(numCount = 4) {
 
   for (let i = 0; i < ops.length; i++) {
     if (ops[i] === '-' && temp < nums[i + 1]) {
-      return generateQuestion(numCount); // prevent 3 - 6 cases
+      return generateQuestion(numCount); // no negative intermediate
     }
 
     temp = eval(`${temp}${ops[i]}${nums[i + 1]}`);
     if (temp < 0 || !Number.isInteger(temp)) {
-      return generateQuestion(numCount); // no negative or decimal intermediate values
+      return generateQuestion(numCount);
     }
 
     expressionParts.push(ops[i]);
@@ -40,8 +40,8 @@ function generateQuestion(numCount = 4) {
   const expression = expressionParts.join('');
   const answer = eval(expression);
 
-  if (answer > 20 || !Number.isInteger(answer)) {
-    return generateQuestion(numCount); // reject if final answer > 20
+  if (answer > 25 || !Number.isInteger(answer)) {
+    return generateQuestion(numCount); // skip if too hard
   }
 
   let options = new Set();
@@ -77,12 +77,8 @@ function loadQuestion() {
   document.getElementById("question-number").innerText = `Question: ${currentQuestion + 1}`;
   document.getElementById("num1").innerText = q.numbers[0];
   document.getElementById("num2").innerText = `${q.operators[0]} ${q.numbers[1]}`;
-  document.getElementById("num3").innerText = q.operators[1]
-    ? `${q.operators[1]} ${q.numbers[2]}`
-    : '';
-  document.getElementById("num4").innerText = q.operators[2]
-    ? `${q.operators[2]} ${q.numbers[3]}`
-    : '';
+  document.getElementById("num3").innerText = q.numbers.length >= 3 ? `${q.operators[1]} ${q.numbers[2]}` : '';
+  document.getElementById("num4").innerText = q.numbers.length === 4 ? `${q.operators[2]} ${q.numbers[3]}` : '';
 
   for (let i = 0; i < 4; i++) {
     const btn = document.getElementById(`option${i}`);
@@ -123,17 +119,15 @@ function startQuiz() {
   wrong = 0;
   timeLeft = 180;
 
-  // Generate 80 four-number questions
-  for (let i = 0; i < 80; i++) {
+  // First 50: 4-number questions
+  for (let i = 0; i < 50; i++) {
     questions.push(generateQuestion(4));
   }
 
-  // Generate 20 three-number questions
-  for (let i = 0; i < 20; i++) {
+  // Next 50: 3-number questions
+  for (let i = 0; i < 50; i++) {
     questions.push(generateQuestion(3));
   }
-
-  questions = shuffleArray(questions); // mix all questions
 
   document.getElementById("quiz-section").classList.remove("hidden");
   document.getElementById("start-section").classList.add("hidden");
