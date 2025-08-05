@@ -13,7 +13,11 @@
     <div id="start-section">
       <h2>🧮 Abacus Practice</h2>
       <p>Test your speed and accuracy with 100 questions in 3 minutes!</p>
-      <button class="option-btn" onclick="showQuiz()">Start Quiz</button>
+      <input type="password" id="password-input" placeholder="Enter access code" class="option-btn" style="margin-bottom: 10px;" />
+<br>
+<button class="option-btn" id="start-btn" onclick="checkPassword()">Start Quiz</button>
+<p id="error-message" style="color: red; display: none;">Incorrect password!</p>
+
     </div>
 
     <!-- Quiz Section -->
