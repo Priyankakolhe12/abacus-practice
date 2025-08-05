@@ -6,6 +6,17 @@ let correct = 0;
 let wrong = 0;
 let timer;
 let timeLeft = 180;
+function checkPassword() {
+  const password = document.getElementById("password-input").value;
+  const correctPassword = "priyanka"; // Set your secret password here
+
+  if (password === correctPassword) {
+    document.getElementById("error-message").style.display = "none";
+    startQuiz(); // This is your existing quiz start function
+  } else {
+    document.getElementById("error-message").style.display = "block";
+  }
+}
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 6) + 1; // 1 to 6 only
