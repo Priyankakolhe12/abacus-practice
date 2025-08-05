@@ -6,26 +6,17 @@ let correct = 0;
 let wrong = 0;
 let timer;
 let timeLeft = 180;
-window.onload = function () {
-  // Check if already authenticated
-  if (localStorage.getItem("accessGranted") === "true") {
-    startQuiz();
-  }
-};
-
 function checkPassword() {
   const password = document.getElementById("password-input").value;
-  const correctPassword = "123"; // Set your actual password
+  const correctPassword = "priyanka"; // Set your secret password here
 
   if (password === correctPassword) {
-    localStorage.setItem("accessGranted", "true"); // Store access flag
     document.getElementById("error-message").style.display = "none";
-    startQuiz();
+    startQuiz(); // This is your existing quiz start function
   } else {
     document.getElementById("error-message").style.display = "block";
   }
 }
-
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 6) + 1; // 1 to 6 only
