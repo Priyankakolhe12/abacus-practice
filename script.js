@@ -8,7 +8,7 @@ let timer;
 let timeLeft = 180;
 function checkPassword() {
   const password = document.getElementById("password-input").value;
-  const correctPassword = "priyanka"; // Set your secret password here
+  const correctPassword = "smahi"; // Set your secret password here
 
   if (password === correctPassword) {
     document.getElementById("error-message").style.display = "none";
@@ -129,16 +129,17 @@ function startQuiz() {
   correct = 0;
   wrong = 0;
   timeLeft = 180;
+  // First 50: 3-number questions
+  for (let i = 0; i < 50; i++) {
+    questions.push(generateQuestion(3));
+  }
 
-  // First 50: 4-number questions
+  // Next 50: 4-number questions
   for (let i = 0; i < 50; i++) {
     questions.push(generateQuestion(4));
   }
 
-  // Next 50: 3-number questions
-  for (let i = 0; i < 50; i++) {
-    questions.push(generateQuestion(3));
-  }
+  
 
   document.getElementById("quiz-section").classList.remove("hidden");
   document.getElementById("start-section").classList.add("hidden");
